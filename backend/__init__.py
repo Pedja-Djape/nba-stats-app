@@ -28,4 +28,8 @@ def create_app(test_config=None):
     def hello():
         return 'Hello, World!'
 
+    @app.route("/bruh")
+    def lol():
+        return "bruuuh"
+
     return app
