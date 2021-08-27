@@ -3,7 +3,9 @@ from flask import Flask
 
 def registerBlueprints(app):
     from backend.main import mainBlueprint
+    from backend.api.api import apiBlueprint
 
+    app.register_blueprint(apiBlueprint)
     app.register_blueprint(mainBlueprint)
 
 
@@ -30,11 +32,10 @@ def create_app(test_config=None):
         pass
 
     registerBlueprints(app)
-
     # a simple page that says hello
     @app.route('/hello')
     def hello():
         return 'Hello, World!'
-
+    
     return app
 
