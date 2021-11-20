@@ -29,7 +29,6 @@ def getAllTeams():
 
 @apiBlueprint.route("/teams/<string:team_name>")
 def getTeamID(team_name):
-    print(team_name)
     if team_name not in teamsDict:
         return {"team_not_found": -1}
     else:
