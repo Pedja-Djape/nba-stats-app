@@ -79,21 +79,3 @@ playersParams = {
     'TeamID': 0,
     'Weight': None
 }
-from requests import get
-resp = get("https://stats.nba.com/stats/playerindex",params=playersParams,headers= {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:72.0) Gecko/20100101 Firefox/72.0',
-        'Referer': 'https://stats.nba.com/',
-        'Connection': 'keep-alive',
-        "Accept": "application/json, text/plain, */*",
-        "Origin": "https://www.nba.com",
-        "Referer": "https://www.nba.com/",
-        'x-nba-stats-origin': 'stats',
-        'x-nba-stats-token': 'true'
-})
-
-ro = resp.json()['resultSets'][0]["rowSet"] 
-
-print("{")
-for player in ro:
-    print(f"''{player[2]}'' ''{player[1]}'': '{player[0]}',")
-print("}")

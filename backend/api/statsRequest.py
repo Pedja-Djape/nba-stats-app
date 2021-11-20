@@ -23,36 +23,8 @@ class statsRequestBase:
 
 class statsRequest(statsRequestBase):
 
-	def __init__(self,endpoint,
-		PlayerID,
-		TeamID,
-		AheadBehind="",
-		ClutchTime="",
-		ContextFilter="SEASON_YEAR='2020-21'",
-		ContextMeasure="FGA",
-		DateFrom="",
-		DateTo="",
-		EndPeriod=10,
-		EndRange=28800,
-		GameID="",
-		LastNGame="",
-		LeagueID="00",
-		Location="",
-		Month=0,
-		OpponentTeamID=0,
-		Outcome="",
-		Period=0,
-		PointDiff="",
-		Position="",
-		RangeType="",
-		RookieYear="",
-		Season="2020-21",
-		SeasonSegment="",
-		SeasonType="Regular Season",
-		StartPeriod=1,
-		StartRange=0,
-		headers=None) -> None:
-		super().__init__(headers=headers)
+	def __init__(self,endpoint):
+		super().__init__()
 		self.endpoint = endpoint
 		self.url = self.baseURL + self.endpoint
 	
