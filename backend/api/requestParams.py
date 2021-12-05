@@ -9,8 +9,6 @@ REQUEST_HEADERS = {
         'x-nba-stats-token': 'true'
 }
 
-import requests as req
-
 SHOTCHART_PARAMS = {
     'AheadBehind': '',
     'ClutchTime': '',
@@ -44,3 +42,18 @@ SHOTCHART_PARAMS = {
     'VsDivision': ''
 }
 
+PLAYERS_PARAMS = {
+    'Active': None,
+    'AllStar': None,
+    'College': None,
+    'Country': None,
+    'DraftPick': None,
+    'DraftYear': None,
+    'Height': None,
+    'Historical':  0,
+    'LeagueID': "00",
+    'PlayerPosition': None,
+    'Season': "2021-22",
+    'TeamID': 0,
+    'Weight': None
+}

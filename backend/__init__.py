@@ -3,7 +3,7 @@ from flask import Flask
 
 def registerBlueprints(app):
     from backend.main import mainBlueprint
-    from backend.api.api import apiBlueprint
+    from backend.api import apiBlueprint
 
     app.register_blueprint(apiBlueprint)
     app.register_blueprint(mainBlueprint)

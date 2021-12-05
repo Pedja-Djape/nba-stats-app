@@ -1,16 +1,6 @@
 import requests as req
-
-REQUEST_HEADERS = {
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64; rv:72.0) Gecko/20100101 Firefox/72.0',
-        'Referer': 'https://stats.nba.com/',
-        'Connection': 'keep-alive',
-        "Accept": "application/json, text/plain, */*",
-        "Origin": "https://www.nba.com",
-        "Referer": "https://www.nba.com/",
-        'x-nba-stats-origin': 'stats',
-        'x-nba-stats-token': 'true'
-}
-
+from .requestParams import *
+from copy import deepcopy
 
 class statsRequestBase:
 	def __init__(self,headers=None) -> None:
@@ -19,49 +9,49 @@ class statsRequestBase:
 			self.headers = REQUEST_HEADERS
 		
 		self.baseURL = "https://stats.nba.com/stats/"
-		
+
 
 class statsRequest(statsRequestBase):
 
-	def __init__(self,endpoint):
+	def __init__(self,resource,queryParams,baseParams):
 		super().__init__()
-		self.endpoint = endpoint
-		self.url = self.baseURL + self.endpoint
-	
+		self.resource    = resource
+		self.url         = self.baseURL + self.resource
+		self.queryParams = queryParams
+		self.baseParams  = deepcopy(baseParams)
+		self.statusCode  = None
+
 	def makeRequest(self):
-		resp = req.get(url=self.url,params={"PlayerID": "203507",
-		"TeamID": "0",
-		"AheadBehind":"",
-		"ClutchTime":"",
-		"ContextFilter":"SEASON_YEAR='2020-21'",
-		"ContextMeasure": "FGA",
-		"DateFrom":"",
-		"DateTo":"",
-		"EndPeriod":10,
-		"EndRange":28800,
-		"GameID":"",
-		"LastNGame":"",
-		"LeagueID":"00",
-		"Location":"",
-		"Month":0,
-		"OpponentTeamID":0,
-		"Outcome":"",
-		"Period":0,
-		"PointDiff":"",
-		"Position":"",
-		"RangeType":"",
-		"RookieYear":"",
-		"Season":"2020-21",
-		"SeasonSegment":"",
-		"SeasonType":"Regular Season",
-		"StartPeriod":1,
-		"StartRange":0})
+		self.modifyParams()
+		self.response = req.get(url=self.url,
+								params=self.baseParams,
+								headers=REQUEST_HEADERS)
+		self.statusCode = self.response.status_code
 
-		print(resp)
+	def getResponseObj(self):
+		return self.response
+	
+	def modifyParams(self):
+		for key in self.queryParams:
+			assert key in PLAYERS_PARAMS
+			if self.queryParams[key] != PLAYERS_PARAMS[key]:
+				self.baseParams[key] = self.queryParams[key]
+		
 
-print(statsRequest("/shotchartdetail","","").makeRequest())
+class teamsMetadataRequest(statsRequest):
+	def __init__(self,queryParams,baseParams = PLAYERS_PARAMS,resource = "playerindex"):
+		super().__init__(resource, queryParams=queryParams,baseParams=baseParams)
+
+	def formatResponse(self):
+		respObj = self.response.json()
+		players = respObj['resultSets'][0]['rowSet']
+		roster = {f"{player[2]} {player[1]}": player[0] for player in players}
+		return roster
 
 
+
+
+	
 
 
 

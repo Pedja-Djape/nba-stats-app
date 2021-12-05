@@ -64,18 +64,3 @@ teamsDict = {
     'Charlotte Hornets': 1610612766
 }
 
-playersParams = {
-    'Active': None,
-    'AllStar': None,
-    'College': None,
-    'Country': None,
-    'DraftPick': None,
-    'DraftYear': None,
-    'Height': None,
-    'Historical':  1,
-    'LeagueID': "00",
-    'PlayerPosition': None,
-    'Season': "2021-22",
-    'TeamID': 0,
-    'Weight': None
-}
