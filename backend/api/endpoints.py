@@ -34,4 +34,3 @@ def getPlayerID(playerName):
     else:
         return {"data": {"id": pid} }
 
-print(getPlayerID("Carmelo Anthony"))
