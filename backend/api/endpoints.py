@@ -36,6 +36,3 @@ def getPlayerID(playerName):
 
 print(getPlayerID("Carmelo Anthony"))
 
-
-
-
