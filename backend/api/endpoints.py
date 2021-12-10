@@ -35,4 +35,3 @@ def getPlayerID(playerName):
         return {"data": {"id": pid} }
 
 print(getPlayerID("Carmelo Anthony"))
-
