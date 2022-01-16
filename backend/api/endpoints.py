@@ -3,6 +3,7 @@ from . import apiBlueprint
 from . import lib
 from flask import request, abort 
 from .players import ALL_PLAYERS
+from backend import api
 
 
 # @apiBlueprint.route("/teams")
@@ -12,6 +13,10 @@ from .players import ALL_PLAYERS
 # @apiBlueprint.route("/players")
 # def getAllPlayers():
 #     return {'data': {"players": ALL_PLAYERS}}
+
+@apiBlueprint.route("/teams")
+def getTeamsMapping():
+    return teams.teamsDict
 
 @apiBlueprint.route("/teams/<string:teamID>")
 def getTeamRoster(teamID):
