@@ -11,7 +11,7 @@ def shutdownServer():
 
 @mainBlueprint.route("/")
 def index():
-    return current_app.send_cleclstatic_file("index.html")
+    return current_app.send_static_file("index.html")
 
 @mainBlueprint.route("/time")
 def getCurrentTime():
