@@ -12,7 +12,7 @@ REQUEST_HEADERS = {
 SHOTCHART_PARAMS = {
     'AheadBehind': '',
     'ClutchTime': '',
-    'ContextFilter': "SEASON_YEAR='2020-21'",
+    'ContextFilter': "SEASON_YEAR='2021-22'",
     'ContextMeasure': "FGA",
     'DateFrom': '',
     'DateTo': '',
@@ -32,14 +32,15 @@ SHOTCHART_PARAMS = {
     'PlayerPosition': '',
     'RangeType': 0,
     'RookieYear': '',
-    'Season': "2020-21",
+    'Season': "2021-22",
     'SeasonSegment': '',
     'SeasonType': "Regular Season",
     'StartPeriod': 1,
     'StartRange': 0,
     'TeamID': 0,
     'VsConference': '',
-    'VsDivision': ''
+    'VsDivision': '',
+    "Career": False
 }
 
 PLAYERS_PARAMS = {
@@ -56,4 +57,10 @@ PLAYERS_PARAMS = {
     'Season': "2021-22",
     'TeamID': 0,
     'Weight': None
+}
+
+PLAYER_CAREER_STATS_PARAMS = {
+    "LeagueID": "00",
+    "PerMode": "PerGame",
+    "PlayerID": None
 }
