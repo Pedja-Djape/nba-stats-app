@@ -20,3 +20,4 @@ def getCurrentTime():
 @mainBlueprint.route("/ready")
 def ready():
     return {"ready": 0}
+

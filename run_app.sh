@@ -17,29 +17,36 @@ function success {
 
 function startApp {
     source venv/bin/activate
-    flask run &
+    python3 wsgi.py &
 }
 
 function shutdownApp {
     for pid in $(ps -ef | grep "nba-stats" | awk '{print $2}'); do 
-        kill -9 $pid; done
+        kill -9 $pid;
+    done
+    
+    for pid in  $(ps -ef | grep "postgres" | awk '{print $2}'); do
+        kill -9 $pid;
+    done
 }
 
 function main {
     host="$1"
     port="$2"
-    cd ..
+
+    service postgresql start
     startApp
     until $(curl --output /dev/null --silent --head --fail "$host:$port/ready"); do 
         printf "."
         sleep 3
+    
     done
-    cd ./tests
-    note "TESTING BACKEND"
-    ./backend.sh "$host:$port" "api/shotchart/player/201565"
+    
+    curl "$host:$port/api/players"
+    read -p "Press any key to stop the app... " -n1 -s
     shutdownApp
+    service postgresql stop
 }
-
 
 main "http://127.0.0.1" "5000"
 
