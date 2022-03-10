@@ -35,14 +35,5 @@ def create_app(configClass='DevConfig'):
         registerBlueprints(app)
         db.create_all()
     
-    
-
-
-    # from .db import db_session
-
-    # @app.teardown_appcontext
-    # def shutdown_session(exception=None):
-    #     db_session.remove()
-    
     return app
 
