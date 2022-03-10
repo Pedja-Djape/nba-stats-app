@@ -1,13 +1,9 @@
-from . import teams
+from . import teams as teams_module
 from . import apiBlueprint
 from . import lib
 from flask import request, abort, Response
 from ..models import Player, Team, db
 from .players import ALL_PLAYERS
-
-# @apiBlueprint.route("/teams")
-# def getAllTeams():
-#     return {'data': {"teams": teamsDict}}
 
 @apiBlueprint.route("/players")
 def getAllPlayers():
@@ -15,28 +11,46 @@ def getAllPlayers():
     players = {player.playerName: player.playerID for player in players}
     return {'data': [players]}
 
+@apiBlueprint.route("/players/<string:player_id>")
+def getPlayer(player_id):
+    player = Player.query.filter_by(id=player_id).first()
+    if player == None:
+        return {'status': "error", "message": f"No player exists with id '{player}'"}
+    return {'status': "success", "data": {"id": player_id, "type": "player", "metadata": player} }
 
-@apiBlueprint.route("/player",methods=["POST","PUT"])
-def updatePlayer():
-    for player in ALL_PLAYERS:
-        playerName = player
-        playerID = ALL_PLAYERS[player]
-        playerEntry = Player(playerID=playerID,playerName=playerName)
-        db.session.add(playerEntry)
+@apiBlueprint.route("/players/<string:player_id>",methods=["POST","PUT"])
+def updatePlayer(player_id):
+    player = Player.query.filter_by(player_id=player_id).scalar()
+    args_dict = request.args.to_dict()
+    if player == None and ('player_name' not in args_dict or 'current_team_id' not in args_dict):
+        return {'status': "error", "message": f"Missing required information to create player."}
+    # add player if not in table
+    new_player = None
+    if player == None:
+        print("NOW HERE \n\n\n")
+        new_player = Player(
+            player_id=player_id,
+            player_name=args_dict['player_name'],
+            current_team_id=args_dict['current_team_id']
+        )
+        db.session.add(new_player)
     db.session.commit()
-    return {"status": "success"}
-    
-
+    return {"status": "success", "data": repr(new_player)}
 
 @apiBlueprint.route("/teams",methods=["GET","POST"])
 def getTeamsMapping():
     if request.method == "POST":
-        team = request.values.get('team')
-        entry = Team(team=team)
-        db.session.add(entry); db.session.commit()
-    return teams.teamsDict
+        for team in teams_module.teams:
+            teamEntry = Team(team_id=team[0],team_abb=team[1],team_name=team[-1])
+            db.session.add(teamEntry)
+        db.session.commit()
+        rval = Team.query.all()
+        return {"status": "success", 'data': rval}
+    teams = Team.query.all()
+    return teams
 
-@apiBlueprint.route("/teams/<string:teamID>")
+
+@apiBlueprint.route("/teams/<string:teamID>/roster")
 def getTeamRoster(teamID):
     argsDict = request.args.to_dict()
     argsDict['TeamID'] = teamID
@@ -62,5 +76,12 @@ def getPlayShotchartData(playerID):
                 'playerShotchartData': playersc
             }  
     }
+
+@apiBlueprint.route("/delete")
+def dle():
+    db.session.query(Player).delete()
+    db.session.commit()
+    return {"status": "success"}
+
 
     
