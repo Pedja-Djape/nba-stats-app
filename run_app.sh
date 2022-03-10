@@ -41,8 +41,7 @@ function main {
         sleep 3
     
     done
-    
-    curl "$host:$port/api/players"
+
     read -p "Press any key to stop the app... " -n1 -s
     shutdownApp
     service postgresql stop
