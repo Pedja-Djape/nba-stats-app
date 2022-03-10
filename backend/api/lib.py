@@ -1,4 +1,4 @@
-from requests.api import get
+from unittest import skip
 from .players import ALL_PLAYERS
 from .teams import teamsDict
 from .requestParams import *
@@ -17,7 +17,7 @@ def getTeamRoster(reqArgs=None):
     teamMetadata = statsRequest.teamsMetadataRequest(queryParams=reqArgs)
     teamMetadata.makeRequest()
     roster = teamMetadata.getRoster()
-    return roster
+    return teamMetadata
 
 def getPlayerSeasons(playerID=None):
     if playerID == None:
@@ -69,6 +69,5 @@ def getPlayerShotchartAvg(reqArgs=None):
     seasons = list(data.keys())
     df = shotchart.getCareerShotchartData(seasons,data,headerMapping,scType='ZONE')
     df = shotchart.getCareerShotchartZoneAvgs(df)
-    print(df)
     return df,headerMapping
 
