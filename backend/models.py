@@ -1,27 +1,42 @@
 from . import db
+from json import dumps
 
+class Team(db.Model):
+    __table_args__ = {'schema': 'nba'}
+    
+    id = db.Column(db.String(60),primary_key=True)
+    name = db.Column(db.String(60),unique=True)
+    abb = db.Column(db.String(3),unique=True)
+    players = db.relationship('Player',backref='team')
+
+
+    def __repr__(self) -> str:
+        return dumps(self.as_dict())
+    
+    def as_dict(self):
+        team_dict = {'name': self.name, 'id': self.id, 'abb': self.abb}
+        return team_dict
 
 
 class Player(db.Model):
-    __tablename__ = 'players'
     __table_args__ = {'schema': 'nba'}
 
-    player_id = db.Column(db.String(256),primary_key=True)
-    player_name = db.Column(db.String(256))
-    current_team_id = db.relationship("Team",backref='player',lazy=True)
+    id = db.Column(db.String(60),primary_key=True)
+    name = db.Column(db.String(60))
+    team_id = db.Column(db.String(60),db.ForeignKey('nba.team.id'))
 
     def __repr__(self) -> str:
-        return f"<Player(player_id='{self.player_id}', player_name='{self.player_name}', current_team_id='{self.current_team_id}')"
-
-class Team(db.Model):
-    __tablename__ = 'team'
-    __table_args__ = {'schema': 'nba'}
+        player_dict = {'id': self.id, 'name': self.name, 'team_id': self.team_id}
+        return dumps(player_dict)
     
-    team_name = db.Column(db.String(256),unique=True)
-    team_id = db.Column(db.String(256),primary_key=True,db.ForeignKey('players.current_team_id'))
-    team_abb = db.Column(db.String(3),unique=True)
+    def as_dict(self):
+        player_dict = {'id': self.id, 'name': self.name, 'team_id': self.team_id}
+        return player_dict
+    
+class Shotchart(db.Model):
+    __table_args__ = {'schema': 'nba',}
 
-
-    def __repr__(self) -> str:
-        return f"Team(team_name='{self.team_name}', team_id={self.team_id}, team_abb={self.team_abb})"
-
+    player_id = db.Column(db.String,primary_key=True)
+    season_id = db.Column(db.String,primary_key=True)
+    team_id   = db.Column(db.String,primary_key=True)
+    # Zones
