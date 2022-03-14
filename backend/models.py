@@ -36,7 +36,12 @@ class Player(db.Model):
 class Shotchart(db.Model):
     __table_args__ = {'schema': 'nba',}
 
-    player_id = db.Column(db.String,primary_key=True)
-    season_id = db.Column(db.String,primary_key=True)
-    team_id   = db.Column(db.String,primary_key=True)
-    # Zones
+    player_id           = db.Column(db.String,primary_key=True)
+    season_id           = db.Column(db.String,primary_key=True)
+    team_id             = db.Column(db.String,primary_key=True)
+    shot_zone_basic     = db.Column(db.String)
+    shot_zone_area      = db.Column(db.String)
+    shot_zone_range     = db.Column(db.String)
+    shot_distance       = db.Column(db.String)
+    field_goal_pct      = db.Column(db.String)
+    num_shots           = db.Column(db.String)
