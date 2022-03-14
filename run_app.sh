@@ -20,16 +20,6 @@ function startApp {
     python3 wsgi.py &
 }
 
-function shutdownApp {
-    for pid in $(ps -ef | grep "nba-stats" | awk '{print $2}'); do 
-        kill -9 $pid;
-    done
-    
-    for pid in  $(ps -ef | grep "postgres" | awk '{print $2}'); do
-        kill -9 $pid;
-    done
-}
-
 function main {
     host="$1"
     port="$2"
@@ -37,14 +27,14 @@ function main {
     service postgresql start
     startApp
     until $(curl --output /dev/null --silent --head --fail "$host:$port/ready"); do 
-        printf "."
+        note ".$NC"
         sleep 3
     
     done
 
-    read -p "Press any key to stop the app... " -n1 -s
-    shutdownApp
-    service postgresql stop
+    read -p $(note "Press any key to stop the app... \n") -n1 -s
+    bash shutdown_app.sh
+    
 }
 
 main "http://127.0.0.1" "5000"
