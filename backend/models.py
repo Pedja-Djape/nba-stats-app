@@ -24,24 +24,26 @@ class Player(db.Model):
     id = db.Column(db.String(60),primary_key=True)
     name = db.Column(db.String(60))
     team_id = db.Column(db.String(60),db.ForeignKey('nba.team.id'))
+    player_shotcharts = db.relationship('Shotchart_Zone',backref='player')
 
     def __repr__(self) -> str:
-        player_dict = {'id': self.id, 'name': self.name, 'team_id': self.team_id}
-        return dumps(player_dict)
+        return dumps(self.as_dict())
     
     def as_dict(self):
         player_dict = {'id': self.id, 'name': self.name, 'team_id': self.team_id}
         return player_dict
     
-class Shotchart(db.Model):
-    __table_args__ = {'schema': 'nba',}
+class Shotchart_Zone(db.Model):
+    __table_args__ = {'schema': 'nba'}
 
-    player_id           = db.Column(db.String, primary_key=True)
-    season_id           = db.Column(db.String, primary_key=True)
-    team_id             = db.Column(db.String, primary_key=True)
-    shot_zone_basic     = db.Column(db.String, nullable=False)
-    shot_zone_area      = db.Column(db.String, nullable=False)
-    shot_zone_range     = db.Column(db.String, nullable=False)
-    shot_distance       = db.Column(db.String, nullable=False)
-    field_goal_pct      = db.Column(db.String, nullable=False)
-    num_shots           = db.Column(db.String, nullable=False)
+    player_id           = db.Column(db.String(60),db.ForeignKey('nba.player.id'),primary_key=True)
+    season_id           = db.Column(db.String(60), primary_key=True)
+    team_id             = db.Column(db.String(60), primary_key=True) # players can get traded in same season --> team must be in primary key
+    shot_zone_basic     = db.Column(db.String(60), nullable=False)
+    shot_zone_area      = db.Column(db.String(60), nullable=False)
+    shot_zone_range     = db.Column(db.String(60), nullable=False)
+    shot_distance       = db.Column(db.Float, nullable=False)
+    field_goal_pct      = db.Column(db.Float, nullable=False)
+    num_shots           = db.Column(db.Integer, nullable=False)
+
+
