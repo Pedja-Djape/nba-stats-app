@@ -83,11 +83,7 @@ def getPlayShotchartData(id):
             }  
     }
 
-@apiBlueprint.route("/delete")
-def dle():
-    db.session.query(Player).delete()
-    db.session.commit()
-    return {"status": "success"}
+
 
 
     
