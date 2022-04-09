@@ -9,6 +9,28 @@ REQUEST_HEADERS = {
         'x-nba-stats-token': 'true'
 }
 
+PLAYERS_PARAMS = {
+    'Active': None,
+    'AllStar': None,
+    'College': None,
+    'Country': None,
+    'DraftPick': None,
+    'DraftYear': None,
+    'Height': None,
+    'Historical':  0,
+    'LeagueID': "00",
+    'PlayerPosition': None,
+    'Season': "2021-22",
+    'TeamID': 0,
+    'Weight': None
+}
+
+PLAYER_CAREER_STATS_PARAMS = {
+    "LeagueID": "00",
+    "PerMode": "PerGame",
+    "PlayerID": None
+}
+
 SHOTCHART_PARAMS = {
     'AheadBehind': '',
     'ClutchTime': '',
@@ -41,26 +63,4 @@ SHOTCHART_PARAMS = {
     'VsConference': '',
     'VsDivision': '',
     "Career": False
-}
-
-PLAYERS_PARAMS = {
-    'Active': None,
-    'AllStar': None,
-    'College': None,
-    'Country': None,
-    'DraftPick': None,
-    'DraftYear': None,
-    'Height': None,
-    'Historical':  0,
-    'LeagueID': "00",
-    'PlayerPosition': None,
-    'Season': "2021-22",
-    'TeamID': 0,
-    'Weight': None
-}
-
-PLAYER_CAREER_STATS_PARAMS = {
-    "LeagueID": "00",
-    "PerMode": "PerGame",
-    "PlayerID": None
 }
