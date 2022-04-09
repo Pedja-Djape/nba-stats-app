@@ -76,13 +76,23 @@ class playerCareerStatsRequest(statsRequest):
 class playerShotchartRequest(statsRequest):
 	def __init__(self, queryParams, baseParams = SHOTCHART_PARAMS, resource = "shotchartdetail"):
 		super().__init__(resource=resource, queryParams=queryParams, baseParams=baseParams)
-
-	def getPlayerShotchartResponse(self):
+		self._data = None
+		self._header_mapping = None
+		self.makeRequest()
+		self.set_data()
+	
+	def set_data(self):
 		resp = self.response[0]
 		assert resp['name'] == 'Shot_Chart_Detail'
-		headerMapping = self.getHeadersMapping(resp['headers'])
-		data = resp['rowSet']
-		return data,headerMapping
+		self._header_mapping = self.getHeadersMapping(resp['headers'])
+		self._data = resp['rowSet']
+
+	def get_raw_data(self):
+		return self._data
+	
+	def get_header_mapping(self):
+		return self._header_mapping
+	
 
 	
 
