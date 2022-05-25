@@ -1,9 +1,8 @@
-from unittest import skip
 from .players import ALL_PLAYERS
 from .teams import teamsDict
 from .requestParams import *
 from . import statsRequest
-from backend.api import players
+# from backend.api import players
 from .stats import shotchart
 
 def getTeamID(teamName):
@@ -35,39 +34,13 @@ def getPlayerSeasons(playerID=None):
 def getPlayerSeasonShotchart(reqArgs=None):
     if reqArgs == None:
         return
-    playerSeasonSC = statsRequest.playerShotchartRequest(queryParams=reqArgs)
-    playerSeasonSC.makeRequest()
-    data,mapping = playerSeasonSC.getPlayerShotchartResponse()
-    return data,mapping
-    
+    player_sc = shotchart.Shotchart(req_args=reqArgs,sc_type="ZONE")
+    sc_df = player_sc.get_zone_avgs()
 
-def getPlayerShotchartRawData(reqArgs=None):
-    if reqArgs == None:
-        return    
-    if "Career" not in reqArgs:
-        data, headerMapping = getPlayerSeasonShotchart(reqArgs=reqArgs)
-        return data, headerMapping
-    del reqArgs["Career"]
-    seasons = getPlayerSeasons(playerID=reqArgs["PlayerID"])
-    data = {}
-    headerMapping = None
-    for season in seasons:
-        reqArgs["Season"] = season
-        pssc, headerMapping = getPlayerSeasonShotchart(reqArgs)
-        data[season] = pssc
-
-    return data,headerMapping
+    print(sc_df)
+    print(sc_df.to_json())
+    return True
 
 
-def getPlayerShotchartAvg(reqArgs=None):
-    if reqArgs == None:
-        return
-    rval = getPlayerShotchartRawData(reqArgs)
-    if rval == None:
-        return
-    data,headerMapping = rval
-    seasons = list(data.keys())
-    df = shotchart.getCareerShotchartData(seasons,data,headerMapping,scType='ZONE')
-    df = shotchart.getCareerShotchartZoneAvgs(df)
-    return df,headerMapping
+
 

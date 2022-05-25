@@ -2,7 +2,10 @@ from . import teams as teams_module
 from . import apiBlueprint
 from . import lib
 from flask import request
-from ..models import Player, Team, db
+from ..models import Player, Team, db, Shotchart_Zone
+from . import stats
+
+import json
 
 @apiBlueprint.route("/players")
 def getAllPlayers():
@@ -16,7 +19,7 @@ def getPlayer(id):
     if player == None:
         return {'status': "error", "message": f"No player exists with id '{id}'"}
     return {'status': "success", "data": {"id": id, "type": "player", "metadata": player.as_dict()} }
-
+    
 @apiBlueprint.route("/players/<string:id>",methods=["POST","PUT"])
 def updatePlayer(id):
     player = Player.query.filter_by(id=id).scalar()
@@ -64,23 +67,51 @@ def getTeamRoster(id):
         player_dict = player.as_dict()
         del player_dict['team_id']
         roster.append(player_dict)
-
-    # roster = [player.as_dict() for player in team.players]
     rval = {"type": "team", "metadata": team.as_dict(),"roster": roster}
     return {"status": "success", "data": [rval]}
     
     
 @apiBlueprint.route("/shotchart/player/<string:id>")
 def getPlayShotchartData(id):
-    argsDict = request.args.to_dict()
-    argsDict['id'] = id
-    playersc, _ = lib.getPlayerShotchartAvg(reqArgs=argsDict)
+    playersc = None
+    args_dict = request.args.to_dict()
+    if "shotchart_type" not in args_dict:
+        return {
+            "status": "error",
+            "message": "Request did not include shotchart type."
+        }
+    if args_dict["shotchart_type"] not in {"ZONE","HEX"}:
+        return {
+            "status": "error",
+            "message": f"Requested invalid shotchart type: {args_dict['shotchart_type']}"
+        }
+    # set player id
+    args_dict['PlayerID'] = id
+    # get shotchart type
+    shotchart_type = args_dict['shotchart_type']
+    del args_dict['shotchart_type']
+    
+    shotchart = None
+    # only zone type shotcharts are kept in database due to storage limitations
+    if shotchart_type == "ZONE":
+        shotchart = Shotchart_Zone.query.filter_by(player_id=id).first()
+    
+    # if not in DB --> make request to stats.nba.com
+    if shotchart == None:
+        player_sc = stats.shotchart.Shotchart(
+            req_args=args_dict,
+            shotchart_type=shotchart_type
+        )
+
+        sc_df = json.loads(
+            player_sc.get_zone_avgs().to_json(
+                orient='records'
+            )
+        )
+
     return {
         "status": "success",
-        'data': 
-            {
-                'playerShotchartData': playersc
-            }  
+        'data': sc_df
     }
 
 
