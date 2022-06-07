@@ -41,3 +41,5 @@ frontend/yarn-error.log*
 todo.txt
 urls.txt
 pgrespwd.txt
+
+setup.sh
