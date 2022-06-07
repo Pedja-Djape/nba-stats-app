@@ -57,6 +57,9 @@ class Shotchart:
         return shot_group_avgs
     
     def get_df(self):
+        if self.type == "ZONE":
+            self.df = self.get_zone_avgs()
+            
         return self.df 
     
 
